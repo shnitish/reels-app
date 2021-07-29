@@ -1,0 +1,48 @@
+.video-post {
+	display: flex;
+	flex-direction: column;
+	border-bottom: 1px solid lightgray;
+}
+
+.video-container {
+	margin-bottom: 15rem;
+	background-color: aliceblue;
+	border-top-left-radius: 2rem;
+	border-top-right-radius: 2rem;
+	height: 88vh;
+	padding: 10px;
+}
+
+.avatar {
+	padding: 10px;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+}
+
+.link {
+	text-decoration: none;
+	color: black;
+}
+
+video::-webkit-media-controls {
+	visibility: hidden;
+}
+
+video::-webkit-media-controls-enclosure {
+	visibility: visible;
+}
+
+.name {
+	margin: 0;
+	font-size: 1.4rem;
+	font-weight: bold;
+}
+
+.post-date {
+	margin: 0;
+	padding: 0px;
+	font-size: 13px;
+}
