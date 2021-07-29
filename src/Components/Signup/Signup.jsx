@@ -1,8 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { firebaseDB, firebaseStorage } from "../../Config/firebase";
 import { AuthContext } from "../../Context/Authprovider";
+import {Button} from "@material-ui/core";
+import CameraIcon from "@material-ui/icons/PhotoCamera";
 
 const Signup = (props) => {
+	const fileRef = useRef();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [username, setUsername] = useState("");
@@ -13,6 +16,7 @@ const Signup = (props) => {
 	const handleFileSubmit = (event) => {
 		let fileObject = event.target.files[0];
 		setProfileImage(fileObject);
+		console.log(fileObject);
 	};
 
 	const handleSignUp = async () => {
@@ -50,6 +54,10 @@ const Signup = (props) => {
 		}
 	};
 
+	const handleProfileUpload=()=> {
+		fileRef.current.click();
+	}
+
 	return (
 		<>
 			<h1>Signup Page</h1>
@@ -59,6 +67,7 @@ const Signup = (props) => {
 					<input
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
+						required
 					></input>
 				</div>
 				<div>
@@ -66,6 +75,7 @@ const Signup = (props) => {
 					<input
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
+						required
 					></input>
 				</div>
 				<div>
@@ -73,20 +83,24 @@ const Signup = (props) => {
 					<input
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
+						required
 					></input>
 				</div>
 				<div>
 					Profile Image
 					<input
+						ref={fileRef}
 						type="file"
 						accept="image/*"
 						onChange={(e) => {
 							handleFileSubmit(e);
 						}}
+						hidden
 					></input>
+					<Button startIcon={<CameraIcon></CameraIcon>} onClick={handleProfileUpload}>Upload</Button>
 				</div>
 			</div>
-			<button onClick={handleSignUp}>SignUp</button>
+			<Button variant="contained" color="primary" onClick={handleSignUp}>SignUp</Button>
 			<h2 style={{ color: "red" }}>{message}</h2>{" "}
 		</>
 	);

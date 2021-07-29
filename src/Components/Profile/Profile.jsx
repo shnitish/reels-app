@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import Header from "../Header/Header";
 import { Avatar, Typography, Container, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { AuthContext } from "../../Context/Authprovider";
@@ -51,10 +52,11 @@ const Profile = () => {
 				});
 		};
 		loadUser();
-	}, []);
+	}, [uid]);
 
 	return (
-		<>
+		<div className="profile">
+		<Header></Header>
 			<Container className={classes.root}>
 				<Paper className={classes.paper}>
 					<Avatar
@@ -66,7 +68,7 @@ const Profile = () => {
 					</Typography>
 				</Paper>
 			</Container>
-		</>
+		</div>
 	);
 };
 

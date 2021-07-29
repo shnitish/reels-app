@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import VideoPost from "../VideoPost/VideoPost";
+import Header from "../Header/Header";
 import { firebaseDB } from "../../Config/firebase";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
@@ -16,7 +17,6 @@ const Feeds = () => {
 			threshold: 0.8,
 		};
 
-		console.log("Inside Intersection obs");
 		function callback(entries) {
 			entries.forEach((entry) => {
 				let child = entry.target.children[0];
@@ -77,8 +77,8 @@ const Feeds = () => {
 	}, []);
 
 	return (
-		<div>
-			{/* <h1>Feeds</h1> */}
+		<div className="feeds">
+			<Header></Header>
 			<div className="feeds-video-list">
 				{loadingComp ? (
 					<CircularProgress

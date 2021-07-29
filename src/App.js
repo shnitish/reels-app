@@ -1,6 +1,5 @@
 import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import {useContext} from "react";
-import Header from "./Components/Header/Header";
 import Login from "./Components/Login/Login";
 import Signup from "./Components/Signup/Signup";
 import Profile from "./Components/Profile/Profile";
@@ -14,7 +13,6 @@ function App()
     <div className="App">
       <AuthProvider>
         <Router>
-          <Header></Header>
           <Switch>
             <Route path="/login" component={Login} exact></Route>
             <Route path="/signup" component={Signup} exact></Route>
