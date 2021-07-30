@@ -1,4 +1,5 @@
 import { React, useContext } from "react";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, makeStyles, Button } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
@@ -10,12 +11,19 @@ const useStyles = makeStyles((theme) => ({
 	grow: {
 		flexGrow: 1,
 	},
-
+	black: {
+		color: "black",
+	},
+	medium: {
+		width: theme.spacing(4),
+		height: theme.spacing(4),
+	},
 	white: {
 		backgroundColor: "white",
 	},
 }));
 
+toast.configure();
 const Header = () => {
 	let classes = useStyles();
 	const { signOut, currentUser } = useContext(AuthContext);
@@ -25,8 +33,8 @@ const Header = () => {
 			return (
 				<div className="header">
 					<div className="avatar">
-						<Link to="/profile">
-							<AccountCircleIcon></AccountCircleIcon>
+						<Link to="/profile" className={classes.black}>
+							<AccountCircleIcon className={classes.medium}></AccountCircleIcon>
 						</Link>
 					</div>
 				</div>
@@ -39,8 +47,8 @@ const Header = () => {
 	const ShowHome = ({ isLoggedIn }) => {
 		if (isLoggedIn) {
 			return (
-				<Link to="/">
-					<HomeIcon></HomeIcon>
+				<Link to="/" className={classes.black}>
+					<HomeIcon className={classes.medium}></HomeIcon>
 				</Link>
 			);
 		} else {
@@ -51,7 +59,7 @@ const Header = () => {
 	const ShowLogout = ({ isLoggedIn, handleLogout }) => {
 		if (isLoggedIn) {
 			return (
-				<Button onClick={handleLogout} color="secondary" variant="outlined">
+				<Button onClick={handleLogout} color="primary" variant="outlined">
 					Logout
 				</Button>
 			);
@@ -63,6 +71,7 @@ const Header = () => {
 	const handle_Logout = async (props) => {
 		try {
 			await signOut();
+			toast.success("Logged Out successfully !", { autoClose: 2000 });
 			props.history.push("/login");
 		} catch (err) {
 			console.log(err);

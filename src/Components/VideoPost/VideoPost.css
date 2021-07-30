@@ -5,11 +5,17 @@
 }
 
 .video-container {
-	margin-bottom: 15rem;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	position: sticky;
+	margin-top: 5rem;
+	margin-bottom: 2rem;
 	background-color: aliceblue;
 	border-top-left-radius: 2rem;
 	border-top-right-radius: 2rem;
-	height: 88vh;
+	box-shadow: 0 0 50px #ccc;
+	height: 86vh;
 	padding: 10px;
 }
 

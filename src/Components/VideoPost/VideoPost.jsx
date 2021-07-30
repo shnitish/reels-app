@@ -1,23 +1,105 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Avatar } from "@material-ui/core";
+import { Avatar, Fab, makeStyles, Typography, Card } from "@material-ui/core";
+import { Favorite } from "@material-ui/icons";
+
+import FavUnfilled from "@material-ui/icons/FavoriteBorder";
 import { firebaseDB } from "../../Config/firebase";
+import { AuthContext } from "../../Context/Authprovider";
 import "./VideoPost.css";
+import { useContext } from "react";
+
+let useStyles = makeStyles({
+	fab: {
+		position: "absolute",
+		zIndex: 2,
+		color: "red",
+		cursor: "pointer",
+		backgroundColor: "transparent",
+		bottom: "112px",
+		right: "20px",
+	},
+	pad: {
+		padding: "10px",
+		fontWeight: "bold",
+	},
+});
 
 const VideoPost = ({ pid, uid, postObj }) => {
+	let classes = useStyles();
+	let { currentUser } = useContext(AuthContext);
 	const [userObject, setUserObject] = useState({});
-	firebaseDB
-		.collection("users")
-		.doc(uid)
-		.get()
-		.then((doc) => {
-			return doc.data();
-		})
-		.then((userObj) => {
-			setUserObject(userObj);
-		});
+	const [likesCount, setLikesCount] = useState(null);
+	const [isLiked, setIsLiked] = useState(false);
+
+	useEffect(() => {
+		firebaseDB
+			.collection("users")
+			.doc(uid)
+			.get()
+			.then((doc) => {
+				return doc.data();
+			})
+			.then((userObj) => {
+				setUserObject(userObj);
+			});
+	});
+
+	//  get count of likes of a post and set to state
+	useEffect(() => {
+		let likes = postObj.likes;
+		if (likes.includes(currentUser.uid)) {
+			setIsLiked(true);
+			setLikesCount(likes.length);
+		} else {
+			if (likes.length) {
+				setLikesCount(likes.length);
+			}
+		}
+	});
+
+	const toggleLikeIcon = async () => {
+		if (isLiked) {
+			let postDoc = postObj;
+			let filteredLikes = postDoc.likes.filter((uid) => {
+				if (uid === currentUser.uid) {
+					return false;
+				} else {
+					return true;
+				}
+			});
+
+			postDoc.likes = filteredLikes;
+			await firebaseDB.collection("posts").doc(postDoc.pid).set(postDoc);
+			setIsLiked(false);
+			likesCount === 1 ? setLikesCount(null) : setLikesCount(likesCount - 1);
+		} else {
+			let postDoc = postObj;
+			postDoc.likes.push(currentUser.uid);
+			await firebaseDB.collection("posts").doc(postDoc.pid).set(postDoc);
+			setIsLiked(true);
+			likesCount == null ? setLikesCount(1) : setLikesCount(likesCount + 1);
+		}
+	};
 	return (
 		<div className="video-container">
+			{isLiked ? (
+				<Fab
+					className={classes.fab}
+					aria-label="like"
+					onClick={() => toggleLikeIcon()}
+				>
+					<Favorite fontSize="large" />
+				</Fab>
+			) : (
+				<Fab
+					className={classes.fab}
+					aria-label="like"
+					onClick={() => toggleLikeIcon()}
+				>
+					<FavUnfilled fontSize="large" />
+				</Fab>
+			)}
 			<Video
 				url={userObject.profileImageUrl}
 				name={userObject.username}
@@ -27,14 +109,16 @@ const VideoPost = ({ pid, uid, postObj }) => {
 						? JSON.stringify(postObj.createdAt.toDate()).slice(1, 11)
 						: ""
 				}
+				likesCount={likesCount}
 			></Video>
 		</div>
 	);
 };
 
-const Video = ({ url, name, src, date }) => {
+const Video = ({ url, name, src, date, likesCount }) => {
+	let classes = useStyles();
 	let styles = {
-		height: "80vh",
+		height: "76vh",
 	};
 	return (
 		<div className="video-post">
@@ -53,6 +137,15 @@ const Video = ({ url, name, src, date }) => {
 				<video style={styles} muted={true} loop={true} controls>
 					<source src={src} type="video/mp4" />
 				</video>
+			</div>
+			<div className={classes.likes}>
+				{likesCount && (
+					<Card>
+						<Typography className={classes.pad} variant="p">
+							Liked by {likesCount} others
+						</Typography>
+					</Card>
+				)}
 			</div>
 		</div>
 	);
