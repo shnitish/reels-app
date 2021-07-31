@@ -77,27 +77,31 @@ const Feeds = () => {
 	}, []);
 
 	return (
-		<div className="feeds">
+		<>
 			<Header></Header>
-			<div className="feeds-video-list">
+			<div className="feeds">
 				{loadingComp ? (
 					<CircularProgress
 						variant="indeterminate"
 						id="circular-loading"
 					></CircularProgress>
 				) : (
-					posts.map((postObj) => {
-						return (
-							<VideoPost
-								key={postObj.pid}
-								uid={postObj.uid}
-								postObj={postObj}
-							></VideoPost>
-						);
-					})
+					<div className="feeds-video-list">
+						{posts.map((postObj) => {
+							return (
+								<div className="video">
+									<VideoPost
+										key={postObj.pid}
+										uid={postObj.uid}
+										postObj={postObj}
+									></VideoPost>
+								</div>
+							);
+						})}
+					</div>
 				)}
 			</div>
-		</div>
+		</>
 	);
 };
 

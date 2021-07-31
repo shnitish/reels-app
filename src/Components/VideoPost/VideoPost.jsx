@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Avatar, Fab, makeStyles, Typography, Card } from "@material-ui/core";
+import { Avatar, Fab, makeStyles, Button } from "@material-ui/core";
 import { Favorite } from "@material-ui/icons";
 
 import FavUnfilled from "@material-ui/icons/FavoriteBorder";
@@ -18,9 +18,19 @@ let useStyles = makeStyles({
 		backgroundColor: "transparent",
 		bottom: "112px",
 		right: "20px",
+		transform: "scale(0.8)"
 	},
 	pad: {
 		padding: "10px",
+		fontWeight: "bold",
+	},
+
+	likesCount: {
+		position: "absolute",
+		zIndex: 2,
+		color: "white !important",
+		bottom: "75px",
+		right: "15px",
 		fontWeight: "bold",
 	},
 });
@@ -100,6 +110,9 @@ const VideoPost = ({ pid, uid, postObj }) => {
 					<FavUnfilled fontSize="large" />
 				</Fab>
 			)}
+			<Button className={classes.likesCount} aria-label="like" disabled>
+				{likesCount}
+			</Button>
 			<Video
 				url={userObject.profileImageUrl}
 				name={userObject.username}
@@ -120,6 +133,12 @@ const Video = ({ url, name, src, date, likesCount }) => {
 	let styles = {
 		height: "76vh",
 	};
+
+	const handleMute = (e) => {
+		e.preventDefault();
+		e.target.muted = !e.target.muted;
+	};
+
 	return (
 		<div className="video-post">
 			<Link to="/" className="link">
@@ -134,18 +153,14 @@ const Video = ({ url, name, src, date, likesCount }) => {
 				</div>
 			</Link>
 			<div id="video">
-				<video style={styles} muted={true} loop={true} controls>
+				<video
+					style={styles}
+					muted={true}
+					loop={true}
+					onClick={(e) => handleMute(e)}
+				>
 					<source src={src} type="video/mp4" />
 				</video>
-			</div>
-			<div className={classes.likes}>
-				{likesCount && (
-					<Card>
-						<Typography className={classes.pad} variant="p">
-							Liked by {likesCount} others
-						</Typography>
-					</Card>
-				)}
 			</div>
 		</div>
 	);

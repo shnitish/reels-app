@@ -1,22 +1,12 @@
 .video-post {
 	display: flex;
 	flex-direction: column;
-	border-bottom: 1px solid lightgray;
+	border-bottom: 2px solid lightgray;
 }
 
 .video-container {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	position: sticky;
-	margin-top: 5rem;
-	margin-bottom: 2rem;
-	background-color: aliceblue;
-	border-top-left-radius: 2rem;
-	border-top-right-radius: 2rem;
-	box-shadow: 0 0 50px #ccc;
-	height: 86vh;
-	padding: 10px;
+	padding: 5px;
+	scroll-snap-align: start;
 }
 
 .avatar {
