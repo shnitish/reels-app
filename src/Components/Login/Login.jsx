@@ -89,7 +89,7 @@ const Login = (props) => {
 
 	return (
 		<div>
-			<Container>
+			<Container style={{ width: "400px" }}>
 				<Grid
 					container
 					direction="column"
@@ -97,7 +97,7 @@ const Login = (props) => {
 					justify="center"
 					style={{ minHeight: "80vh" }}
 				>
-					<Grid item>
+					<Grid item className={classes.fullWidth}>
 						{/* Login Form */}
 						<Card variant="outlined" className={classes.mb}>
 							<CardMedia
