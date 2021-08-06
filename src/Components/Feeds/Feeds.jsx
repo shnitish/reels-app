@@ -41,29 +41,8 @@ const Feeds = () => {
 		};
 	});
 
-	/*Load all posts object from firebase and set state*/
-	const loadFeed = () => {
-		firebaseDB
-			.collection("posts")
-			.get()
-			.then((snapshot) => {
-				let allPosts = snapshot.docs.map((doc) => {
-					return doc.data();
-				});
-				setPosts(allPosts);
-				setLoadingComps(false);
-			});
-	};
-
-	useEffect(() => {
-		loadFeed();
-
-		return function cleanup() {
-			setPosts([]);
-		};
-	}, []);
-
-	/*Refresh posts when firebase has new updates*/
+	/*Load all posts object from firebase and set state
+	Refresh posts when firebase has new updates*/
 	useEffect(() => {
 		firebaseDB
 			.collection("posts")
@@ -73,7 +52,12 @@ const Feeds = () => {
 					return doc.data();
 				});
 				setPosts(allPosts);
+				setLoadingComps(false);
 			});
+
+		return function cleanup() {
+			setPosts([]);
+		};
 	}, []);
 
 	return (

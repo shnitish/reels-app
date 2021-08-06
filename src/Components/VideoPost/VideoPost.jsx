@@ -18,7 +18,7 @@ let useStyles = makeStyles({
 		backgroundColor: "transparent",
 		bottom: "112px",
 		right: "20px",
-		transform: "scale(0.8)"
+		transform: "scale(0.8)",
 	},
 	pad: {
 		padding: "10px",
@@ -35,7 +35,7 @@ let useStyles = makeStyles({
 	},
 });
 
-const VideoPost = ({ pid, uid, postObj }) => {
+const VideoPost = ({uid, postObj }) => {
 	let classes = useStyles();
 	let { currentUser } = useContext(AuthContext);
 	const [userObject, setUserObject] = useState({});
@@ -114,6 +114,7 @@ const VideoPost = ({ pid, uid, postObj }) => {
 				{likesCount}
 			</Button>
 			<Video
+				pid={postObj.pid}
 				url={userObject.profileImageUrl}
 				name={userObject.username}
 				src={postObj.videoLink}
@@ -128,7 +129,7 @@ const VideoPost = ({ pid, uid, postObj }) => {
 	);
 };
 
-const Video = ({ url, name, src, date, likesCount }) => {
+const Video = ({ pid, url, name, src, date, likesCount }) => {
 	let classes = useStyles();
 	let styles = {
 		height: "76vh",
@@ -154,6 +155,7 @@ const Video = ({ url, name, src, date, likesCount }) => {
 			</Link>
 			<div id="video">
 				<video
+					id={pid}
 					style={styles}
 					muted={true}
 					loop={true}

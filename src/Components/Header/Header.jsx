@@ -1,11 +1,15 @@
-import { React, useContext } from "react";
+import { React, useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { AppBar, Toolbar, makeStyles, Button } from "@material-ui/core";
+import { AppBar, Toolbar, makeStyles,  Avatar } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { AuthContext } from "../../Context/Authprovider";
+import { firebaseDB } from "../../Config/firebase";
 import Upload from "../../Components/Upload/Upload";
+import logo from "../../logo.jpg";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+
+import "./Header.css";
 
 const useStyles = makeStyles((theme) => ({
 	grow: {
@@ -14,7 +18,14 @@ const useStyles = makeStyles((theme) => ({
 	black: {
 		color: "black",
 	},
+	small: {
+		transform: "scale(0.8)",
+	},
 	medium: {
+		width: theme.spacing(3),
+		height: theme.spacing(3),
+	},
+	large: {
 		width: theme.spacing(4),
 		height: theme.spacing(4),
 	},
@@ -25,16 +36,37 @@ const useStyles = makeStyles((theme) => ({
 
 toast.configure();
 const Header = () => {
-	let classes = useStyles();
 	const { signOut, currentUser } = useContext(AuthContext);
+	const [userObj, setUserObj] = useState([]);
+	let uid = currentUser.uid;
 
+	useEffect(() => {
+		const loadUser = () => {
+			firebaseDB
+				.collection("users")
+				.doc(uid)
+				.get()
+				.then((doc) => {
+					return doc.data();
+				})
+				.then((userObject) => {
+					setUserObj(userObject);
+				});
+		};
+		loadUser();
+	}, [uid]);
+
+	let classes = useStyles();
 	const ShowProfile = ({ isLoggedIn }) => {
 		if (isLoggedIn) {
 			return (
 				<div className="header">
 					<div className="avatar">
 						<Link to="/profile" className={classes.black}>
-							<AccountCircleIcon className={classes.medium}></AccountCircleIcon>
+							<Avatar
+								src={userObj.profileImageUrl}
+								className={classes.small}
+							></Avatar>
 						</Link>
 					</div>
 				</div>
@@ -59,13 +91,28 @@ const Header = () => {
 	const ShowLogout = ({ isLoggedIn, handleLogout }) => {
 		if (isLoggedIn) {
 			return (
-				<Button onClick={handleLogout} color="primary" variant="outlined">
+				<ExitToAppIcon
+					onClick={handleLogout}
+					color="primary"
+					className={`${classes.large} ${classes.black}`}
+					style={{ cursor: "pointer" }}
+				>
 					Logout
-				</Button>
+				</ExitToAppIcon>
 			);
 		} else {
 			return null;
 		}
+	};
+
+	const ShowBanner = () => {
+		return (
+			<Link to="/" className={classes.black}>
+				<div className="banner">
+					<img src={logo} alt="Banner"></img>
+				</div>
+			</Link>
+		);
 	};
 
 	const handle_Logout = async (props) => {
@@ -88,6 +135,7 @@ const Header = () => {
 						</label>
 					</div>
 				) : null}
+				<ShowBanner></ShowBanner>
 				<div className={classes.grow} />
 				<ShowHome isLoggedIn={currentUser}></ShowHome>
 				<ShowProfile isLoggedIn={currentUser}></ShowProfile>
